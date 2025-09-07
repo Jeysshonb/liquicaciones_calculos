@@ -359,13 +359,13 @@ def mostrar_landing_page():
             st.session_state.pagina_actual = 'archivo_plano'
             st.rerun()
     
-    # Footer elegante con créditos
+    # Footer que se adapta automáticamente al tema
     st.markdown("""
     <div class="footer-credits">
         <h4 style='color: #667eea; margin-bottom: 0.5rem;'>📊 Nómina 2025</h4>
         <h5 style='color: #28a745; margin-bottom: 1rem;'>Jerónimo Martins Colombia</h5>
-        <p style='margin: 0; color: #6c757d;'>Creado por <strong>Jeysshon</strong></p>
-        <small style='color: #adb5bd;'>Sistema optimizado para máximo rendimiento</small>
+        <p style='margin: 0;'>Creado por <strong>Jeysshon</strong></p>
+        <small style='opacity: 0.7;'>Sistema optimizado para máximo rendimiento</small>
     </div>
     """, unsafe_allow_html=True)
 
