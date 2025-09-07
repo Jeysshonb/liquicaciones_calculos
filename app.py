@@ -647,4 +647,13 @@ def mostrar_resumen_procesamiento(estadisticas):
     # Agregar total
     resumen_data.append({
         'Concepto': '🎯 **TOTAL GENERAL**',
-        'Registros': f
+        'Registros': f"**{total_registros:,}**",
+        'Valor Total': f"**${total_valor:,}**",
+        'Promedio': f"**${total_valor/total_registros:,.0f}**" if total_registros > 0 else "**$0**"
+    })
+    
+    df_resumen = pd.DataFrame(resumen_data)
+    st.dataframe(df_resumen, use_container_width=True, hide_index=True)
+
+if __name__ == "__main__":
+    main()
