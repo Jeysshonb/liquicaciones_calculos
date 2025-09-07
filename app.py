@@ -33,25 +33,18 @@ def main():
     - 🔜 Más módulos próximamente...
     
     **Archivos requeridos:**
-    - Archivo CAJA (Excel)
-    - Archivo BIG PASS (Excel)
+    - 📁 **CAJA**: Archivo Excel con columna "DESCUADRES DE CAJA PARA DESCONTAR"
+    - 📁 **BIG PASS**: Archivo Excel con columnas "Descontar", "Pagar", "PEOPLE", "N° Sap ", "Terminación"
     """)
     
-    # Información del sistema
-    st.sidebar.markdown("---")
-    st.sidebar.info(f"🕒 Fecha actual: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-    
     # Tabs principales
-    tab1, tab2, tab3 = st.tabs(["🏠 Inicio", "📄 Generar Archivo Plano", "📊 Información"])
+    tab1, tab2 = st.tabs(["📄 Generar Archivo Plano", "🏠 Inicio"])
     
     with tab1:
-        mostrar_inicio()
-    
-    with tab2:
         generar_archivo_plano()
     
-    with tab3:
-        mostrar_informacion()
+    with tab2:
+        mostrar_inicio()
 
 def mostrar_inicio():
     st.header("🏠 Bienvenido al Sistema de Liquidaciones")
@@ -72,9 +65,8 @@ def mostrar_inicio():
         - Más procesadores
         """)
         
-        # Botón de acceso directo
-        if st.button("🚀 Ir a Generar Archivo Plano", type="primary"):
-            st.switch_page("📄 Generar Archivo Plano")
+        # Información de acceso directo
+        st.info("👆 La funcionalidad principal está en la pestaña 'Generar Archivo Plano'")
     
     with col2:
         st.subheader("📊 Conceptos Procesados")
@@ -100,9 +92,19 @@ def generar_archivo_plano():
     st.markdown("""
     Este módulo procesa los archivos de **CAJA** y **BIG PASS** para generar el archivo plano de liquidaciones.
     
-    **Archivos requeridos:**
-    - 📁 **CAJA**: Contiene descuadres de caja (concepto Z498)
-    - 📁 **BIG PASS**: Contiene datos de descontar (Z609), pagar (Y602) y people (Y608)
+    **📋 Columnas requeridas en los archivos:**
+    
+    **ARCHIVO CAJA:**
+    - `SAP` - Número SAP del empleado
+    - `Fecha Terminación. (Digite)` - Fecha de terminación
+    - `DESCUADRES DE CAJA PARA DESCONTAR` - Valores a procesar
+    
+    **ARCHIVO BIG PASS:**
+    - `N° Sap ` - Número SAP del empleado  
+    - `Terminación` - Fecha de terminación
+    - `Descontar` - Valores a descontar (concepto Z609)
+    - `Pagar` - Valores a pagar (concepto Y602)
+    - `PEOPLE` - Valores people (concepto Y608)
     """)
     
     # Upload de archivos
@@ -154,12 +156,6 @@ def generar_archivo_plano():
         )
     
     with col4:
-        mostrar_preview = st.checkbox(
-            "👀 Mostrar vista previa de datos",
-            value=True,
-            help="Muestra una vista previa de los primeros registros"
-        )
-        
         mostrar_estadisticas = st.checkbox(
             "📊 Mostrar estadísticas detalladas",
             value=True,
@@ -220,32 +216,6 @@ def generar_archivo_plano():
                                 mime="text/csv",
                                 use_container_width=True
                             )
-                        
-                        # Mostrar preview si está habilitado
-                        if mostrar_preview:
-                            st.markdown("---")
-                            st.subheader("👀 Vista Previa de Datos")
-                            
-                            # Filtros para la vista previa
-                            col_preview1, col_preview2 = st.columns(2)
-                            with col_preview1:
-                                concepto_filtro = st.selectbox(
-                                    "Filtrar por concepto:",
-                                    ["Todos"] + list(df_resultado['CONCEPTO'].unique())
-                                )
-                            
-                            with col_preview2:
-                                num_filas = st.slider("Número de filas a mostrar:", 5, 50, 20)
-                            
-                            # Aplicar filtro
-                            df_preview = df_resultado.copy()
-                            if concepto_filtro != "Todos":
-                                df_preview = df_preview[df_preview['CONCEPTO'] == concepto_filtro]
-                            
-                            st.dataframe(df_preview.head(num_filas), use_container_width=True)
-                            
-                            # Información adicional
-                            st.info(f"📊 Mostrando {min(num_filas, len(df_preview))} de {len(df_preview)} registros")
                     
                     else:
                         st.error("❌ No se generaron datos. Verifica que los archivos contengan información válida.")
@@ -449,96 +419,6 @@ def mostrar_resumen_procesamiento(estadisticas):
     
     df_resumen = pd.DataFrame(resumen_data)
     st.dataframe(df_resumen, use_container_width=True, hide_index=True)
-
-def mostrar_informacion():
-    st.header("📊 Información del Sistema")
-    
-    # Tabs para organizar mejor la información
-    info_tab1, info_tab2, info_tab3 = st.tabs(["📋 Estructura de Archivos", "🔧 Módulos", "⚙️ Técnico"])
-    
-    with info_tab1:
-        st.subheader("📁 Estructura requerida de archivos")
-        
-        st.markdown("### 📄 Archivo CAJA")
-        st.markdown("**Columnas requeridas:**")
-        caja_ejemplo = {
-            'SAP': [12345678, 87654321, 11223344],
-            'Fecha Terminación. (Digite)': ['2025-07-31', '2025-08-15', '2025-08-20'],
-            'DESCUADRES DE CAJA PARA DESCONTAR': [25000, 15000, 30000],
-            'Otras columnas...': ['...', '...', '...']
-        }
-        st.dataframe(pd.DataFrame(caja_ejemplo), use_container_width=True)
-        
-        st.markdown("### 📄 Archivo BIG PASS")
-        st.markdown("**Columnas requeridas:**")
-        bigpass_ejemplo = {
-            'N° Sap ': [12345678, 87654321, 11223344],
-            'Terminación': ['2025-07-31', '2025-08-15', '2025-08-20'],
-            'Descontar': [50000, 0, 25000],
-            'Pagar': [0, 75000, 0],
-            'PEOPLE': [0, 0, 40000],
-            'Otras columnas...': ['...', '...', '...']
-        }
-        st.dataframe(pd.DataFrame(bigpass_ejemplo), use_container_width=True)
-        
-        st.warning("⚠️ **Importante**: Los archivos deben ser formato Excel (.xlsx o .xls) y contener exactamente estos nombres de columnas.")
-    
-    with info_tab2:
-        st.subheader("🔧 Módulos Disponibles")
-        st.markdown("""
-        ### 📄 archivo_plano.py
-        **Función principal**: `procesar_todo_simple()`
-        
-        **Procesa**:
-        - Archivos de CAJA (descuadres)
-        - Archivos de BIG PASS (descontar, pagar, people)
-        
-        **Genera**:
-        - Archivo plano con conceptos SAP
-        - Reportes de resumen
-        - Archivos Excel/CSV
-        """)
-    
-    with info_tab3:
-        st.subheader("📋 Especificaciones Técnicas")
-        st.markdown("""
-        **Conceptos SAP generados**:
-        - `Z498`: CAJA - Descuadres de caja
-        - `Z609`: BIG PASS - Valores a descontar
-        - `Y602`: BIG PASS - Valores a pagar
-        - `Y608`: BIG PASS - People
-        
-        **Formatos soportados**:
-        - Entrada: Excel (.xlsx, .xls)
-        - Salida: Excel (.xlsx) o CSV (.csv)
-        """)
-        
-        # Información técnica adicional
-        tech_col1, tech_col2, tech_col3 = st.columns(3)
-        
-        with tech_col1:
-            st.markdown("""
-            **Dependencias**:
-            - pandas
-            - openpyxl
-            - streamlit
-            """)
-        
-        with tech_col2:
-            st.markdown("""
-            **Estructura de archivos**:
-            - `app.py` (este archivo)
-            - `archivo_plano.py`
-            - `requirements.txt`
-            """)
-        
-        with tech_col3:
-            st.markdown("""
-            **GitHub**:
-            - Repositorio público
-            - Deployment automático
-            - Streamlit Cloud ready
-            """)
 
 if __name__ == "__main__":
     main()
