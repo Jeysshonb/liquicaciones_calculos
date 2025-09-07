@@ -189,8 +189,12 @@ def generar_archivo_plano():
                             mostrar_resumen_procesamiento(estadisticas)
                         
                         # Preparar archivo para descarga con hora colombiana
-                        colombia_tz = pytz.timezone('America/Bogota')
-                        timestamp = datetime.now(colombia_tz).strftime("_%Y%m%d_%H%M%S") if incluir_timestamp else ""
+                        if PYTZ_AVAILABLE:
+                            colombia_tz = pytz.timezone('America/Bogota')
+                            timestamp = datetime.now(colombia_tz).strftime("_%Y%m%d_%H%M%S") if incluir_timestamp else ""
+                        else:
+                            # Fallback a hora local si pytz no está disponible
+                            timestamp = datetime.now().strftime("_%Y%m%d_%H%M%S") if incluir_timestamp else ""
                         
                         if formato_salida == "Excel (.xlsx)":
                             output = io.BytesIO()
