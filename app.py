@@ -453,9 +453,37 @@ def mostrar_resumen_procesamiento(estadisticas):
 def mostrar_informacion():
     st.header("📊 Información del Sistema")
     
-    col1, col2 = st.columns(2)
+    # Tabs para organizar mejor la información
+    info_tab1, info_tab2, info_tab3 = st.tabs(["📋 Estructura de Archivos", "🔧 Módulos", "⚙️ Técnico"])
     
-    with col1:
+    with info_tab1:
+        st.subheader("📁 Estructura requerida de archivos")
+        
+        st.markdown("### 📄 Archivo CAJA")
+        st.markdown("**Columnas requeridas:**")
+        caja_ejemplo = {
+            'SAP': [12345678, 87654321, 11223344],
+            'Fecha Terminación. (Digite)': ['2025-07-31', '2025-08-15', '2025-08-20'],
+            'DESCUADRES DE CAJA PARA DESCONTAR': [25000, 15000, 30000],
+            'Otras columnas...': ['...', '...', '...']
+        }
+        st.dataframe(pd.DataFrame(caja_ejemplo), use_container_width=True)
+        
+        st.markdown("### 📄 Archivo BIG PASS")
+        st.markdown("**Columnas requeridas:**")
+        bigpass_ejemplo = {
+            'N° Sap ': [12345678, 87654321, 11223344],
+            'Terminación': ['2025-07-31', '2025-08-15', '2025-08-20'],
+            'Descontar': [50000, 0, 25000],
+            'Pagar': [0, 75000, 0],
+            'PEOPLE': [0, 0, 40000],
+            'Otras columnas...': ['...', '...', '...']
+        }
+        st.dataframe(pd.DataFrame(bigpass_ejemplo), use_container_width=True)
+        
+        st.warning("⚠️ **Importante**: Los archivos deben ser formato Excel (.xlsx o .xls) y contener exactamente estos nombres de columnas.")
+    
+    with info_tab2:
         st.subheader("🔧 Módulos Disponibles")
         st.markdown("""
         ### 📄 archivo_plano.py
@@ -471,7 +499,7 @@ def mostrar_informacion():
         - Archivos Excel/CSV
         """)
     
-    with col2:
+    with info_tab3:
         st.subheader("📋 Especificaciones Técnicas")
         st.markdown("""
         **Conceptos SAP generados**:
@@ -484,36 +512,33 @@ def mostrar_informacion():
         - Entrada: Excel (.xlsx, .xls)
         - Salida: Excel (.xlsx) o CSV (.csv)
         """)
-    
-    # Información técnica adicional
-    st.markdown("---")
-    st.subheader("⚙️ Información Técnica")
-    
-    tech_col1, tech_col2, tech_col3 = st.columns(3)
-    
-    with tech_col1:
-        st.markdown("""
-        **Dependencias**:
-        - pandas
-        - openpyxl
-        - streamlit
-        """)
-    
-    with tech_col2:
-        st.markdown("""
-        **Estructura de archivos**:
-        - `app.py` (este archivo)
-        - `archivo_plano.py`
-        - `requirements.txt`
-        """)
-    
-    with tech_col3:
-        st.markdown("""
-        **GitHub**:
-        - Repositorio público
-        - Deployment automático
-        - Streamlit Cloud ready
-        """)
+        
+        # Información técnica adicional
+        tech_col1, tech_col2, tech_col3 = st.columns(3)
+        
+        with tech_col1:
+            st.markdown("""
+            **Dependencias**:
+            - pandas
+            - openpyxl
+            - streamlit
+            """)
+        
+        with tech_col2:
+            st.markdown("""
+            **Estructura de archivos**:
+            - `app.py` (este archivo)
+            - `archivo_plano.py`
+            - `requirements.txt`
+            """)
+        
+        with tech_col3:
+            st.markdown("""
+            **GitHub**:
+            - Repositorio público
+            - Deployment automático
+            - Streamlit Cloud ready
+            """)
 
 if __name__ == "__main__":
     main()
