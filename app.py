@@ -159,7 +159,8 @@ def mostrar_landing_page():
     st.markdown("""
     <div style='text-align: center; padding: 2rem 0; color: #666; background-color: #f8f9fa; border-radius: 10px; margin-top: 2rem;'>
         <h4 style='color: #1f77b4; margin-bottom: 0.5rem;'>📊 Nómina 2025</h4>
-        <p style='margin: 0; font-size: 0.9rem;'>Creado por <strong>Jeysshon</strong></p>
+        <h5 style='color: #2e7d32; margin-bottom: 0.5rem;'>Jerónimo Martins Colombia</h5>
+        <p style='margin: 0; font-size: 0.9rem;'>Creado <span style='color: #e91e63;'>♥</span> por <strong>Jeysshon</strong></p>
     </div>
     """, unsafe_allow_html=True)
 
