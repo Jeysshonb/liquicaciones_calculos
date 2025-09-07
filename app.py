@@ -186,7 +186,7 @@ def mostrar_landing_page():
     with col3:
         st.metric("⚡ Velocidad", "Rápido", "Procesamiento automático")
     with col4:
-        st.metric("🔄 Versión", "1.0", "Estable")
+        st.metric("🔄 Versión", "1.0", "Nómina 2025")
     
     # Call to action final
     st.markdown("---")
