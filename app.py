@@ -143,6 +143,49 @@ def mostrar_landing_page():
         </div>
         """, unsafe_allow_html=True)
     
+    # Proceso paso a paso
+    st.markdown("---")
+    st.markdown("## 📋 ¿Cómo funciona?")
+    
+    # Steps visualization
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>1️⃣</h3>
+            <h4>Cargar Archivos</h4>
+            <p>Sube tus archivos CAJA y BIG PASS</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>2️⃣</h3>
+            <h4>Configurar</h4>
+            <p>Elige formato de salida y opciones</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>3️⃣</h3>
+            <h4>Procesar</h4>
+            <p>El sistema genera los conceptos SAP</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>4️⃣</h3>
+            <h4>Descargar</h4>
+            <p>Obtén tu archivo plano listo</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
     # Información técnica
     st.markdown("---")
     st.markdown("## 📝 Información Técnica")
@@ -196,6 +239,15 @@ def mostrar_landing_page():
         if st.button("▶️ **COMENZAR PROCESAMIENTO**", type="primary", use_container_width=True):
             st.session_state.pagina_actual = 'archivo_plano'
             st.rerun()
+    
+    # Footer con créditos
+    st.markdown("---")
+    st.markdown("""
+    <div style='text-align: center; padding: 2rem 0; color: #666; background-color: #f8f9fa; border-radius: 10px; margin-top: 2rem;'>
+        <h4 style='color: #1f77b4; margin-bottom: 0.5rem;'>📊 Nómina 2025</h4>
+        <p style='margin: 0; font-size: 0.9rem;'>Creado por <strong>Jeysshon</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
 
 def mostrar_pagina_archivo_plano():
     """Página dedicada al procesamiento de archivos"""
