@@ -21,94 +21,47 @@ def main():
         layout="wide"
     )
     
-    # Inicializar session_state
+    # Inicializar session_state para navegación
+    if 'pagina_actual' not in st.session_state:
+        st.session_state.pagina_actual = 'inicio'
+    
+    # Inicializar archivos
     if 'archivo_caja' not in st.session_state:
         st.session_state.archivo_caja = None
     if 'archivo_big_pass' not in st.session_state:
         st.session_state.archivo_big_pass = None
     
-    # Sidebar
-    configurar_sidebar()
-    
-    # Navegación principal
-    st.title("📊 Sistema de Liquidaciones de Nómina")
-    
-    # Menú de navegación horizontal
-    tab1, tab2 = st.tabs(["🏠 Inicio", "📄 Generar Archivo Plano"])
-    
-    with tab1:
-        mostrar_inicio()
-    
-    with tab2:
-        generar_archivo_plano()
+    # Navegación
+    if st.session_state.pagina_actual == 'inicio':
+        mostrar_landing_page()
+    elif st.session_state.pagina_actual == 'archivo_plano':
+        mostrar_pagina_archivo_plano()
 
-def configurar_sidebar():
-    """Sidebar simplificado con solo carga de archivos"""
-    st.sidebar.header("📁 Cargar Archivos")
-    
-    # Upload de archivos
-    archivo_caja = st.sidebar.file_uploader(
-        "📊 Archivo CAJA",
-        type=['xlsx', 'xls'],
-        key="sidebar_caja",
-        help="Archivo Excel con datos de caja"
-    )
-    
-    archivo_big_pass = st.sidebar.file_uploader(
-        "🎫 Archivo BIG PASS",
-        type=['xlsx', 'xls'],
-        key="sidebar_big_pass",
-        help="Archivo Excel con datos de big pass"
-    )
-    
-    # Actualizar session_state
-    st.session_state.archivo_caja = archivo_caja
-    st.session_state.archivo_big_pass = archivo_big_pass
-    
-    # Estado de archivos
-    st.sidebar.markdown("### 📊 Estado")
-    col1, col2 = st.sidebar.columns(2)
-    with col1:
-        caja_status = "✅" if archivo_caja else "⏳"
-        st.markdown(f"**CAJA:** {caja_status}")
-    with col2:
-        big_pass_status = "✅" if archivo_big_pass else "⏳"
-        st.markdown(f"**BIG PASS:** {big_pass_status}")
-    
-    if archivo_caja and archivo_big_pass:
-        st.sidebar.success("✅ Listos para procesar")
-    else:
-        st.sidebar.info("📁 Carga ambos archivos")
-
-def mostrar_inicio():
-    """Página de inicio tipo landing page"""
+def mostrar_landing_page():
+    """Landing page principal - sin sidebar"""
     
     # Hero section
     st.markdown("""
-    <div style='text-align: center; padding: 2rem 0;'>
-        <h1 style='color: #1f77b4; font-size: 3rem; margin-bottom: 1rem;'>
+    <div style='text-align: center; padding: 3rem 0;'>
+        <h1 style='color: #1f77b4; font-size: 4rem; margin-bottom: 1rem;'>
             💼 Liquidaciones de Nómina
         </h1>
-        <p style='font-size: 1.2rem; color: #666; margin-bottom: 2rem;'>
-            Sistema automatizado para el procesamiento de archivos de liquidación
+        <p style='font-size: 1.4rem; color: #666; margin-bottom: 3rem;'>
+            Sistema automatizado para el procesamiento de archivos de liquidación SAP
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Estado de archivos - prominente
+    # Botón principal prominente
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        archivo_caja = st.session_state.archivo_caja
-        archivo_big_pass = st.session_state.archivo_big_pass
+        if st.button("🚀 **GENERAR ARCHIVO PLANO**", type="primary", use_container_width=True):
+            st.session_state.pagina_actual = 'archivo_plano'
+            st.rerun()
         
-        if archivo_caja and archivo_big_pass:
-            st.success("🎉 **¡Archivos listos!** Puedes procesar las liquidaciones", icon="✅")
-            if st.button("🚀 **IR A GENERAR ARCHIVO PLANO**", type="primary", use_container_width=True):
-                st.switch_page("📄 Generar Archivo Plano")
-        elif archivo_caja or archivo_big_pass:
-            st.warning("⚠️ **Falta un archivo** - Carga el archivo restante en el panel lateral", icon="📁")
-        else:
-            st.info("📁 **Comienza cargando los archivos** en el panel lateral", icon="👈")
+        st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
+        st.caption("Procesa tus archivos CAJA y BIG PASS automáticamente")
+        st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -147,37 +100,79 @@ def mostrar_inicio():
         🔍 Vista previa de resultados  
         """)
     
-    # Instrucciones
+    # Proceso paso a paso
     st.markdown("---")
-    st.markdown("## 📋 Cómo usar el sistema")
+    st.markdown("## 📋 ¿Cómo funciona?")
     
-    steps_col1, steps_col2 = st.columns(2)
+    # Steps visualization
+    col1, col2, col3, col4 = st.columns(4)
     
-    with steps_col1:
+    with col1:
         st.markdown("""
-        ### 🚀 **Pasos para generar liquidaciones:**
-        
-        **1.** 📁 Carga el archivo **CAJA** en el panel lateral  
-        **2.** 🎫 Carga el archivo **BIG PASS** en el panel lateral  
-        **3.** 📄 Ve a la pestaña **"Generar Archivo Plano"**  
-        **4.** ⚙️ Configura las opciones de salida  
-        **5.** 🚀 Haz clic en **"Procesar"**  
-        **6.** 📥 Descarga tu archivo generado  
-        """)
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>1️⃣</h3>
+            <h4>Cargar Archivos</h4>
+            <p>Sube tus archivos CAJA y BIG PASS</p>
+        </div>
+        """, unsafe_allow_html=True)
     
-    with steps_col2:
+    with col2:
         st.markdown("""
-        ### 📝 **Columnas requeridas en archivos:**
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>2️⃣</h3>
+            <h4>Configurar</h4>
+            <p>Elige formato de salida y opciones</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>3️⃣</h3>
+            <h4>Procesar</h4>
+            <p>El sistema genera los conceptos SAP</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 10px; margin-bottom: 1rem;'>
+            <h3 style='color: #1f77b4;'>4️⃣</h3>
+            <h4>Descargar</h4>
+            <p>Obtén tu archivo plano listo</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Información técnica
+    st.markdown("---")
+    st.markdown("## 📝 Información Técnica")
+    
+    info_col1, info_col2 = st.columns(2)
+    
+    with info_col1:
+        st.markdown("""
+        ### 📊 **Archivo CAJA** (Requerido)
         
-        **📊 Archivo CAJA:**
+        **Columnas necesarias:**
         - `SAP` - Número SAP del empleado
         - `Fecha Terminación. (Digite)` - Fecha de terminación
-        - `DESCUADRES DE CAJA PARA DESCONTAR` - Valores
+        - `DESCUADRES DE CAJA PARA DESCONTAR` - Valores a procesar
         
-        **🎫 Archivo BIG PASS:**
+        **Formato:** Excel (.xlsx, .xls)  
+        **Concepto generado:** Z498
+        """)
+    
+    with info_col2:
+        st.markdown("""
+        ### 🎫 **Archivo BIG PASS** (Requerido)
+        
+        **Columnas necesarias:**
         - `N° Sap ` - Número SAP del empleado
         - `Terminación` - Fecha de terminación
-        - `Descontar`, `Pagar`, `PEOPLE` - Valores
+        - `Descontar`, `Pagar`, `PEOPLE` - Valores correspondientes
+        
+        **Formato:** Excel (.xlsx, .xls)  
+        **Conceptos generados:** Z609, Y602, Y608
         """)
     
     # Footer con estadísticas
@@ -185,76 +180,124 @@ def mostrar_inicio():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📊 Conceptos", "4", "SAP")
+        st.metric("📊 Conceptos SAP", "4", "Z498, Z609, Y602, Y608")
     with col2:
-        st.metric("📁 Formatos", "2", "Excel/CSV")
+        st.metric("📁 Formatos Salida", "2", "Excel y CSV")
     with col3:
-        st.metric("⚡ Módulos", "1", "Activo")
+        st.metric("⚡ Velocidad", "Rápido", "Procesamiento automático")
     with col4:
         st.metric("🔄 Versión", "1.0", "Estable")
+    
+    # Call to action final
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown("### 🎯 ¿Listo para comenzar?")
+        if st.button("▶️ **COMENZAR PROCESAMIENTO**", type="primary", use_container_width=True):
+            st.session_state.pagina_actual = 'archivo_plano'
+            st.rerun()
 
-def generar_archivo_plano():
-    """Página dedicada solo al procesamiento"""
+def mostrar_pagina_archivo_plano():
+    """Página dedicada al procesamiento de archivos"""
     
-    # Header
-    st.markdown("# 📄 Generar Archivo Plano")
+    # Header con navegación
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if st.button("⬅️ Volver al Inicio"):
+            st.session_state.pagina_actual = 'inicio'
+            st.rerun()
+    
+    with col2:
+        st.markdown("# 📄 Generar Archivo Plano")
+    
     st.markdown("Procesamiento automático de archivos CAJA y BIG PASS para liquidaciones de nómina")
+    st.markdown("---")
     
-    # Verificar archivos
-    archivo_caja = st.session_state.archivo_caja
-    archivo_big_pass = st.session_state.archivo_big_pass
-    
-    if not archivo_caja or not archivo_big_pass:
-        st.error("⚠️ **Faltan archivos** - Ve al panel lateral y carga ambos archivos para continuar")
-        
-        missing = []
-        if not archivo_caja:
-            missing.append("📊 Archivo CAJA")
-        if not archivo_big_pass:
-            missing.append("🎫 Archivo BIG PASS")
-        
-        st.warning(f"**Archivos faltantes:** {', '.join(missing)}")
-        return
-    
-    # === SECCIÓN 1: ESTADO DE ARCHIVOS ===
-    st.markdown("## 📁 Archivos Cargados")
+    # === SECCIÓN 1: CARGA DE ARCHIVOS ===
+    st.markdown("## 📁 Paso 1: Cargar Archivos")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 📊 CAJA")
-        st.success(f"✅ **{archivo_caja.name}**")
-        st.caption(f"📏 Tamaño: {archivo_caja.size:,} bytes")
+        st.markdown("### 📊 Archivo CAJA")
+        archivo_caja = st.file_uploader(
+            "Selecciona el archivo CAJA (Excel)",
+            type=['xlsx', 'xls'],
+            key="caja_uploader",
+            help="Archivo que contiene descuadres de caja"
+        )
         
-        # Vista previa
-        with st.expander("👀 Vista previa"):
-            try:
-                df_preview = pd.read_excel(archivo_caja, nrows=3)
-                st.dataframe(df_preview, use_container_width=True)
-                total_rows = len(pd.read_excel(archivo_caja))
-                st.caption(f"📊 Total de registros: {total_rows:,}")
-            except Exception as e:
-                st.error(f"Error: {e}")
+        if archivo_caja:
+            st.session_state.archivo_caja = archivo_caja
+            st.success(f"✅ **{archivo_caja.name}**")
+            st.caption(f"📏 Tamaño: {archivo_caja.size:,} bytes")
+            
+            # Vista previa
+            with st.expander("👀 Vista previa CAJA"):
+                try:
+                    df_preview = pd.read_excel(archivo_caja, nrows=5)
+                    st.dataframe(df_preview, use_container_width=True)
+                    total_rows = len(pd.read_excel(archivo_caja))
+                    st.caption(f"📊 Total de registros: {total_rows:,}")
+                except Exception as e:
+                    st.error(f"Error al leer archivo: {e}")
+        else:
+            st.info("📁 Selecciona el archivo CAJA para continuar")
     
     with col2:
-        st.markdown("### 🎫 BIG PASS")
-        st.success(f"✅ **{archivo_big_pass.name}**")
-        st.caption(f"📏 Tamaño: {archivo_big_pass.size:,} bytes")
+        st.markdown("### 🎫 Archivo BIG PASS")
+        archivo_big_pass = st.file_uploader(
+            "Selecciona el archivo BIG PASS (Excel)",
+            type=['xlsx', 'xls'],
+            key="big_pass_uploader",
+            help="Archivo que contiene datos de descontar, pagar y people"
+        )
         
-        # Vista previa
-        with st.expander("👀 Vista previa"):
-            try:
-                df_preview = pd.read_excel(archivo_big_pass, nrows=3)
-                st.dataframe(df_preview, use_container_width=True)
-                total_rows = len(pd.read_excel(archivo_big_pass))
-                st.caption(f"📊 Total de registros: {total_rows:,}")
-            except Exception as e:
-                st.error(f"Error: {e}")
+        if archivo_big_pass:
+            st.session_state.archivo_big_pass = archivo_big_pass
+            st.success(f"✅ **{archivo_big_pass.name}**")
+            st.caption(f"📏 Tamaño: {archivo_big_pass.size:,} bytes")
+            
+            # Vista previa
+            with st.expander("👀 Vista previa BIG PASS"):
+                try:
+                    df_preview = pd.read_excel(archivo_big_pass, nrows=5)
+                    st.dataframe(df_preview, use_container_width=True)
+                    total_rows = len(pd.read_excel(archivo_big_pass))
+                    st.caption(f"📊 Total de registros: {total_rows:,}")
+                except Exception as e:
+                    st.error(f"Error al leer archivo: {e}")
+        else:
+            st.info("📁 Selecciona el archivo BIG PASS para continuar")
+    
+    # Estado de archivos
+    st.markdown("### 📊 Estado de Archivos")
+    
+    status_col1, status_col2, status_col3 = st.columns(3)
+    
+    with status_col1:
+        caja_status = "✅ Cargado" if archivo_caja else "⏳ Pendiente"
+        st.metric("📊 CAJA", caja_status)
+    
+    with status_col2:
+        big_pass_status = "✅ Cargado" if archivo_big_pass else "⏳ Pendiente"
+        st.metric("🎫 BIG PASS", big_pass_status)
+    
+    with status_col3:
+        if archivo_caja and archivo_big_pass:
+            st.metric("🎯 Estado", "✅ Listo", "Para procesar")
+        else:
+            st.metric("🎯 Estado", "⏳ Esperando", "Archivos faltantes")
+    
+    # Solo continuar si ambos archivos están cargados
+    if not archivo_caja or not archivo_big_pass:
+        st.warning("⚠️ **Carga ambos archivos para continuar al siguiente paso**")
+        return
     
     st.markdown("---")
     
     # === SECCIÓN 2: CONFIGURACIÓN ===
-    st.markdown("## ⚙️ Configuración del Procesamiento")
+    st.markdown("## ⚙️ Paso 2: Configuración del Procesamiento")
     
     config_col1, config_col2 = st.columns(2)
     
@@ -286,29 +329,28 @@ def generar_archivo_plano():
             help="Muestra las primeras filas del archivo generado"
         )
     
-    st.markdown("---")
-    
-    # === SECCIÓN 3: PROCESAMIENTO ===
-    st.markdown("## 🚀 Procesamiento")
-    
-    # Descripción del proceso
-    with st.expander("ℹ️ ¿Qué hace el procesamiento?", expanded=False):
+    # Información del proceso
+    with st.expander("ℹ️ ¿Qué hará el procesamiento?", expanded=False):
         st.markdown("""
         **El sistema procesará automáticamente:**
         
         1. **📊 Archivo CAJA** → Genera registros con concepto **Z498** (Descuadres de caja)
         2. **🎫 Archivo BIG PASS** → Genera registros con conceptos:
            - **Z609** (Descontar)
-           - **Y602** (Pagar)
+           - **Y602** (Pagar)  
            - **Y608** (People)
-        3. **🔄 Consolidación** → Unifica todos los registros
+        3. **🔄 Consolidación** → Unifica todos los registros en un DataFrame
         4. **📁 Exportación** → Genera archivo en el formato seleccionado
+        5. **📊 Estadísticas** → Muestra resumen de registros procesados
         """)
     
-    # Botón principal
-    st.markdown("### 🎯 Ejecutar Procesamiento")
+    st.markdown("---")
     
-    if st.button("🚀 **PROCESAR ARCHIVOS Y GENERAR PLANO**", type="primary", use_container_width=True):
+    # === SECCIÓN 3: PROCESAMIENTO ===
+    st.markdown("## 🚀 Paso 3: Ejecutar Procesamiento")
+    
+    # Botón principal
+    if st.button("🎯 **PROCESAR ARCHIVOS Y GENERAR PLANO**", type="primary", use_container_width=True):
         ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, incluir_timestamp, mostrar_estadisticas, mostrar_preview)
 
 def ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, incluir_timestamp, mostrar_estadisticas, mostrar_preview):
@@ -354,7 +396,7 @@ def ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, inclu
                 
                 # === DESCARGA ===
                 st.markdown("---")
-                st.markdown("## 📥 Descargar Archivo")
+                st.markdown("## 📥 Descargar Archivo Generado")
                 
                 # Preparar archivo para descarga
                 timestamp = datetime.now().strftime("_%Y%m%d_%H%M%S") if incluir_timestamp else ""
@@ -380,7 +422,8 @@ def ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, inclu
                     
                     with download_col2:
                         st.info(f"📁 **Archivo:** {nombre_archivo}")
-                        st.caption(f"📊 {len(df_resultado):,} registros")
+                        st.caption(f"📊 {len(df_resultado):,} registros procesados")
+                        st.caption(f"📅 Generado: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
                 
                 else:
                     csv_data = df_resultado.to_csv(index=False, encoding='utf-8-sig', sep=';')
@@ -398,7 +441,16 @@ def ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, inclu
                     
                     with download_col2:
                         st.info(f"📁 **Archivo:** {nombre_archivo}")
-                        st.caption(f"📊 {len(df_resultado):,} registros")
+                        st.caption(f"📊 {len(df_resultado):,} registros procesados")
+                        st.caption(f"📅 Generado: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+                
+                # Botón para procesar más archivos
+                st.markdown("---")
+                if st.button("🔄 **Procesar Otros Archivos**", use_container_width=True):
+                    # Limpiar archivos de session_state
+                    st.session_state.archivo_caja = None
+                    st.session_state.archivo_big_pass = None
+                    st.rerun()
             
             else:
                 st.error("❌ **No se generaron datos**")
@@ -595,13 +647,4 @@ def mostrar_resumen_procesamiento(estadisticas):
     # Agregar total
     resumen_data.append({
         'Concepto': '🎯 **TOTAL GENERAL**',
-        'Registros': f"**{total_registros:,}**",
-        'Valor Total': f"**${total_valor:,}**",
-        'Promedio': f"**${total_valor/total_registros:,.0f}**" if total_registros > 0 else "**$0**"
-    })
-    
-    df_resumen = pd.DataFrame(resumen_data)
-    st.dataframe(df_resumen, use_container_width=True, hide_index=True)
-
-if __name__ == "__main__":
-    main()
+        'Registros': f
