@@ -149,9 +149,14 @@ def procesar_todo_simple():
             for _, row in df_people.iterrows():
                 fecha_str = ''
                 if pd.notna(row['Terminación']):
+                    # Primero convertir a string y limpiar
+                    fecha_raw = str(row['Terminación']).strip()
+                    print(f"DEBUG PEOPLE - Fecha raw: {fecha_raw}, tipo: {type(row['Terminación'])}")
+                    
                     fecha_dt = pd.to_datetime(row['Terminación'], errors='coerce')
                     if pd.notna(fecha_dt):
                         fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
+                        print(f"DEBUG PEOPLE - Fecha convertida: {fecha_str}")
                 
                 valor_people = pd.to_numeric(row['PEOPLE'], errors='coerce')
                 if valor_people > 0:
