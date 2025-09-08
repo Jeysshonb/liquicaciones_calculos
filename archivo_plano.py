@@ -1,5 +1,3 @@
-#falta fondo y casino
-
 import pandas as pd
 import os
 from datetime import datetime
@@ -39,7 +37,7 @@ def procesar_todo_simple():
             if pd.notna(row['Fecha Terminación. (Digite)']):
                 fecha_dt = pd.to_datetime(row['Fecha Terminación. (Digite)'], errors='coerce')
                 if pd.notna(fecha_dt):
-                    fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                    fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
             
             registro = {
                 'SAP': row['SAP'],
@@ -72,7 +70,7 @@ def procesar_todo_simple():
             if pd.notna(row['Terminación']):
                 fecha_dt = pd.to_datetime(row['Terminación'], errors='coerce')
                 if pd.notna(fecha_dt):
-                    fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                    fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
             
             registro = {
                 'SAP': str(row['N° Sap ']).strip(),
@@ -103,7 +101,7 @@ def procesar_todo_simple():
             if pd.notna(row['Terminación']):
                 fecha_dt = pd.to_datetime(row['Terminación'], errors='coerce')
                 if pd.notna(fecha_dt):
-                    fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                    fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
             
             valor_pagar = pd.to_numeric(row['Pagar'], errors='coerce')
             if valor_pagar > 0:
@@ -153,7 +151,7 @@ def procesar_todo_simple():
                 if pd.notna(row['Terminación']):
                     fecha_dt = pd.to_datetime(row['Terminación'], errors='coerce')
                     if pd.notna(fecha_dt):
-                        fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                        fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
                 
                 valor_people = pd.to_numeric(row['PEOPLE'], errors='coerce')
                 if valor_people > 0:
