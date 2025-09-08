@@ -509,7 +509,7 @@ def ejecutar_procesamiento(archivo_caja, archivo_big_pass, formato_salida, inclu
             pass
 
 def procesar_con_archivo_plano(ruta_caja, ruta_big_pass):
-    """Función de procesamiento"""
+    """Función de procesamiento - FORMATO DE FECHA CORREGIDO"""
     try:
         todos_los_registros = []
         estadisticas = {
@@ -533,7 +533,7 @@ def procesar_con_archivo_plano(ruta_caja, ruta_big_pass):
                 if 'Fecha Terminación. (Digite)' in row and pd.notna(row['Fecha Terminación. (Digite)']):
                     fecha_dt = pd.to_datetime(row['Fecha Terminación. (Digite)'], errors='coerce')
                     if pd.notna(fecha_dt):
-                        fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                        fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
                 
                 valor = int(pd.to_numeric(row[columna_descuadres], errors='coerce'))
                 registro = {
@@ -564,7 +564,7 @@ def procesar_con_archivo_plano(ruta_caja, ruta_big_pass):
                     if 'Terminación' in row and pd.notna(row['Terminación']):
                         fecha_dt = pd.to_datetime(row['Terminación'], errors='coerce')
                         if pd.notna(fecha_dt):
-                            fecha_str = fecha_dt.strftime('%d/%m/%Y')
+                            fecha_str = fecha_dt.strftime('%d.%m.%Y')  # CAMBIADO: puntos en lugar de barras
                     
                     valor = int(pd.to_numeric(row[columna], errors='coerce'))
                     registro = {
